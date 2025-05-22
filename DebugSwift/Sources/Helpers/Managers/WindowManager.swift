@@ -27,6 +27,7 @@ enum WindowManager {
 
         let navigation = UINavigationController(rootViewController: UIViewController())
         navigation.setBackgroundColor(color: .clear)
+        navigation.navigationBar.isHidden = true
         window.rootViewController = navigation
         window.isHidden = false
         return window
@@ -57,10 +58,12 @@ enum WindowManager {
 
     static func showNavigationBar() {
         rootNavigation?.setBackgroundColor()
+        rootNavigation?.navigationBar.isHidden = false
     }
 
     static func removeNavigationBar() {
         rootNavigation?.setBackgroundColor(color: .clear)
+        rootNavigation?.navigationBar.isHidden = true
     }
 
     static func presentViewDebugger() {
