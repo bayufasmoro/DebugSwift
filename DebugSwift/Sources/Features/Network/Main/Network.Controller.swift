@@ -43,7 +43,7 @@ final class NetworkViewController: BaseController, MainFeatureType {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        addDeleteButton()
+        addNavigationButtons()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -75,7 +75,8 @@ final class NetworkViewController: BaseController, MainFeatureType {
         ) { [weak self] notification in
             if let success = notification.object as? Bool {
                 self?.reloadHttp(
-                    needScrollToEnd: self?.viewModel.reachEnd ?? true,
+                    // needScrollToEnd: self?.viewModel.reachEnd ?? true,
+                    needScrollToEnd: self?.isTableViewAtBottom() ?? false,
                     success: success
                 )
             }
@@ -92,6 +93,19 @@ final class NetworkViewController: BaseController, MainFeatureType {
         if needScrollToEnd {
             scrollToBottom()
         }
+    }
+
+    private func isTableViewAtBottom() -> Bool {
+        guard tableView.numberOfSections > 0 else { return false }
+
+        let lastSection = tableView.numberOfSections - 1
+        let lastRow = tableView.numberOfRows(inSection: lastSection) - 1
+
+        guard lastRow >= 0 else { return false }
+
+        let lastIndexPath = IndexPath(row: lastRow, section: lastSection)
+
+        return tableView.indexPathsForVisibleRows?.contains(lastIndexPath) ?? false
     }
 
     private func setupSearchBar() {
@@ -111,24 +125,46 @@ final class NetworkViewController: BaseController, MainFeatureType {
         }
     }
 
-    private func addDeleteButton() {
+    private func scrollToTop() {
+        if tableView.numberOfSections > 0 {
+            let firstSection = 0
+            let firstRow = tableView.numberOfRows(inSection: firstSection) > 0 ? 0 : -1
+
+            if firstRow >= 0 {
+                let indexPath = IndexPath(row: firstRow, section: firstSection)
+                tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+            }
+        }
+    }
+
+    private func addNavigationButtons() {
         guard !viewModel.models.isEmpty else { return }
-        addRightBarButton(
-            image: .named("trash.circle", default: "clean".localized()),
-            tintColor: .red
-        ) { [weak self] in
-            self?.showAlert(
+
+        let upButton = CustomBarButtonItem(image: .named("arrow.up.circle", default: "clean".localized()), tintColor: .blue, style: .plain) { _ in
+            self.scrollToTop()
+        }
+
+        let downButton = CustomBarButtonItem(image: .named("arrow.down.circle", default: "clean".localized()), tintColor: .blue, style: .plain) { _ in
+            self.scrollToBottom()
+        }
+        
+        let deleteButton = CustomBarButtonItem(image: .named("trash.circle", default: "clean".localized()), tintColor: .red, style: .plain) { _ in
+            self.showAlert(
                 with: "delete.title".localized(),
                 title: "delete.subtitle".localized(),
                 leftButtonTitle: "delete.action".localized(),
                 leftButtonStyle: .destructive,
                 leftButtonHandler: { _ in
-                    self?.clearAction()
+                    self.clearAction()
                 },
                 rightButtonTitle: "delete.cancel".localized(),
                 rightButtonStyle: .cancel
             )
         }
+
+        // Set both buttons on the left side and right side of the navigation bar
+        navigationItem.rightBarButtonItems = [deleteButton]
+        navigationItem.leftBarButtonItems = [downButton, upButton]
     }
 
     private func clearAction() {
