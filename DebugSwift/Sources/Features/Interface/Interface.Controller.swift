@@ -85,7 +85,7 @@ extension InterfaceViewController: UITableViewDataSource, UITableViewDelegate {
             )
             cell.setup(title: title)
             return cell
-        case .touches, .colorize, .animations, .darkMode:
+        case .touches, .colorize, .animations/*, .darkMode*/:
             return toggleCell(
                 title: title,
                 index: indexPath.row,
@@ -124,8 +124,8 @@ extension InterfaceViewController: MenuSwitchTableViewCellDelegate {
         case .touches:
             UserInterfaceToolkit.shared.showingTouchesEnabled = isOn
 
-        case .darkMode:
-            UserInterfaceToolkit.shared.darkModeEnabled = isOn
+        // case .darkMode:
+        //     UserInterfaceToolkit.shared.darkModeEnabled = isOn
 
         default: break
         }
@@ -154,7 +154,7 @@ extension InterfaceViewController {
         case animations
         case touches
         case grid
-        case darkMode
+        // case darkMode
 
         var title: String? {
             switch self {
@@ -166,8 +166,8 @@ extension InterfaceViewController {
                 return "Colorized view borders"
             case .animations:
                 return "Slow animations"
-            case .darkMode:
-                return "Dark Mode"
+            // case .darkMode:
+            //     return "Dark Mode"
             }
         }
 
@@ -181,9 +181,9 @@ extension InterfaceViewController {
 
             case .touches:
                 return UserInterfaceToolkit.shared.showingTouchesEnabled
-            case .darkMode:
-                return UserInterfaceToolkit.shared.darkModeEnabled
-                return false
+            // case .darkMode:
+            //     return UserInterfaceToolkit.shared.darkModeEnabled
+            //     return false
             default:
                 return false
             }
