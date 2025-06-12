@@ -57,12 +57,12 @@ class UserInterfaceToolkit: @unchecked Sendable {
         }
     }
     
-    var darkModeEnabled: Bool = false {
-        didSet {
-            guard oldValue != darkModeEnabled else { return }
-            updateColorScheme()
-        }
-    }
+    // var darkModeEnabled: Bool = false {
+    //     didSet {
+    //         guard oldValue != darkModeEnabled else { return }
+    //         updateColorScheme()
+    //     }
+    // }
     
     var selectedGridOverlayColorSchemeIndex: Int = 0 {
         didSet {
@@ -90,7 +90,7 @@ class UserInterfaceToolkit: @unchecked Sendable {
     // MARK: - Setup
     
     private func setupInitialState() {
-        darkModeEnabled = UIScreen.main.traitCollection.userInterfaceStyle == .dark
+        // darkModeEnabled = UIScreen.main.traitCollection.userInterfaceStyle == .dark
         
         // Set initial color scheme
         if let colorScheme = gridOverlay.colorScheme,
@@ -163,11 +163,11 @@ class UserInterfaceToolkit: @unchecked Sendable {
         UIWindowScene._windows.forEach { setShowingTouchesEnabled(for: $0) }
     }
     
-    private func updateColorScheme() {
-        UIWindowScene._windows.forEach { window in
-            window.overrideUserInterfaceStyle = darkModeEnabled ? .dark : .light
-        }
-    }
+    // private func updateColorScheme() {
+    //     UIWindowScene._windows.forEach { window in
+    //         window.overrideUserInterfaceStyle = darkModeEnabled ? .dark : .light
+    //     }
+    // }
     
     private func setSpeed(for window: UIWindow) {
         let speed: Float = slowAnimationsEnabled ? 0.1 : 1.0
