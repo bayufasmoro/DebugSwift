@@ -249,11 +249,13 @@ extension SQLQueryViewController: UITableViewDataSource {
         
         if indexPath.row == 0 {
             // Header row
-            var content = cell.defaultContentConfiguration()
-            content.text = resultColumns.joined(separator: " | ")
-            content.textProperties.font = .systemFont(ofSize: 14, weight: .semibold)
-            cell.contentConfiguration = content
-            cell.backgroundColor = .systemGray6
+            if #available(iOS 14.0, *) {
+                var content = cell.defaultContentConfiguration()
+                content.text = resultColumns.joined(separator: " | ")
+                content.textProperties.font = .systemFont(ofSize: 14, weight: .semibold)
+                cell.contentConfiguration = content
+                cell.backgroundColor = .systemGray6
+            }
         } else {
             // Data row
             let row = resultRows[indexPath.row - 1]
@@ -272,11 +274,13 @@ extension SQLQueryViewController: UITableViewDataSource {
                 return "NULL"
             }
             
-            var content = cell.defaultContentConfiguration()
-            content.text = values.joined(separator: " | ")
-            content.textProperties.font = .systemFont(ofSize: 14)
-            cell.contentConfiguration = content
-            cell.backgroundColor = .systemBackground
+            if #available(iOS 14.0, *) {
+                var content = cell.defaultContentConfiguration()
+                content.text = values.joined(separator: " | ")
+                content.textProperties.font = .systemFont(ofSize: 14)
+                cell.contentConfiguration = content
+                cell.backgroundColor = .systemBackground
+            }
         }
         
         return cell
@@ -329,11 +333,15 @@ final class QueryHistoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        content.text = history[indexPath.row]
-        content.textProperties.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
-        content.textProperties.numberOfLines = 2
-        cell.contentConfiguration = content
+        
+        if #available(iOS 14.0, *) {
+            var content = cell.defaultContentConfiguration()
+            content.text = history[indexPath.row]
+            content.textProperties.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
+            content.textProperties.numberOfLines = 2
+            cell.contentConfiguration = content
+        }
+        
         return cell
     }
     

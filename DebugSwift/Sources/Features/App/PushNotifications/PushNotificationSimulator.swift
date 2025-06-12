@@ -367,11 +367,11 @@ extension PushNotificationSimulator: UNUserNotificationCenterDelegate {
         let title = notification.request.content.title
         print("📱 Notification will present in foreground: \(title)")
         
-        // Default options for foreground notifications
-        var options: UNNotificationPresentationOptions = [.banner, .sound, .badge]
-        options.insert(.banner)
-        
-        completionHandler(options)
+        if #available(iOS 14.0, *) {
+            var options: UNNotificationPresentationOptions = [.banner, .sound, .badge]
+            options.insert(.banner)
+            completionHandler(options)
+        }
         
         // Update status asynchronously
         DispatchQueue.main.async {
