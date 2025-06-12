@@ -14,7 +14,7 @@ final class InterfaceViewController: BaseController, MainFeatureType {
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor.black
+        tableView.backgroundColor = Theme.shared.backgroundColor
         tableView.separatorColor = .darkGray
 
         return tableView
@@ -44,7 +44,7 @@ final class InterfaceViewController: BaseController, MainFeatureType {
             forCellReuseIdentifier: MenuSwitchTableViewCell.identifier
         )
 
-        view.backgroundColor = UIColor.black
+        view.backgroundColor = Theme.shared.backgroundColor
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
@@ -56,7 +56,7 @@ final class InterfaceViewController: BaseController, MainFeatureType {
     }
 
     func setupTabBar() {
-        title = "Interface"
+        title = "interface-title".localized()
         tabBarItem = UITabBarItem(
             title: title,
             image: .named("square.grid.2x2"),
@@ -85,7 +85,7 @@ extension InterfaceViewController: UITableViewDataSource, UITableViewDelegate {
             )
             cell.setup(title: title)
             return cell
-        case .touches, .colorize, .animations, .darkMode:
+        case .touches, .colorize, .animations/*, .darkMode*/:
             return toggleCell(
                 title: title,
                 index: indexPath.row,
@@ -124,8 +124,10 @@ extension InterfaceViewController: MenuSwitchTableViewCellDelegate {
         case .touches:
             UserInterfaceToolkit.shared.showingTouchesEnabled = isOn
 
-        case .darkMode:
-            UserInterfaceToolkit.shared.darkModeEnabled = isOn
+//        case .darkMode:
+//            if #available(iOS 13.0, *) {
+//                UserInterfaceToolkit.darkModeEnabled = isOn
+//            }
 
         default: break
         }
@@ -148,26 +150,28 @@ extension InterfaceViewController: MenuSwitchTableViewCellDelegate {
 }
 
 extension InterfaceViewController {
-    @MainActor
     enum Features: Int, CaseIterable {
         case colorize
         case animations
         case touches
         case grid
-        case darkMode
+//        case darkMode
 
         var title: String? {
             switch self {
             case .touches:
-                return "Showing touches"
+                return "showing-touches".localized()
             case .grid:
-                return "Grid overlay"
+                return "grid-overlay".localized()
             case .colorize:
-                return "Colorized view borders"
+                return "colorized-view-borders".localized()
             case .animations:
-                return "Slow animations"
-            case .darkMode:
-                return "Dark Mode"
+                return "slow-animations".localized()
+//            case .darkMode:
+//                if #available(iOS 13.0, *) {
+//                    return "dark-mode".localized()
+//                }
+//                return nil
             }
         }
 
@@ -181,9 +185,11 @@ extension InterfaceViewController {
 
             case .touches:
                 return UserInterfaceToolkit.shared.showingTouchesEnabled
-            case .darkMode:
-                return UserInterfaceToolkit.shared.darkModeEnabled
-                return false
+//            case .darkMode:
+//                if #available(iOS 13.0, *) {
+//                    return UserInterfaceToolkit.darkModeEnabled
+//                }
+//                return false
             default:
                 return false
             }
@@ -191,7 +197,7 @@ extension InterfaceViewController {
 
         static var allCasesWithPermissions: [Features] {
             var cases = Features.allCases
-            if DebugSwift.App.shared.disableMethods.contains(.views) {
+            if DebugSwift.App.disableMethods.contains(.views) {
                 cases.removeAll(where: { $0 == .colorize || $0 == .touches })
             }
 
